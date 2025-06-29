@@ -1,34 +1,41 @@
-# File: .github/workflows/merly-mentor-check.yml
-name: Merly Mentor Check
-on:
-  push:
-    branches:
-      - main
+# File: action.yml
+name: "Merly Mentor Check"
+description: "Install MPCC Universal and run MerlyMentor checks on your repository"  # ≤125 chars
+branding:
+  icon: "rocket"
+  color: "blue"
 
-jobs:
-  merly-check:
-    runs-on: ubuntu-latest
-    env:
-      MM_KEY: ${{ secrets.MM_KEY }}
-      MM_INSTALL_DIR: merly-install
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2       # fetch latest commit + its parent
+inputs:
+  mm-key:
+    description: "Merly API key (set as repo secret MM_KEY)"
+    required: true
+  install-dir:
+    description: "Directory to install MPCC Universal into"
+    required: false
+    default: "merly-install"
+  fetch-depth:
+    description: "Commits to fetch for parent lookup (1, 2, or 0 for full history)"
+    required: false
+    default: "2"
 
-      - name: Install MPCC Universal (staging)
-        timeout-minutes: 10
-        run: |
-          echo "::add-mask::${MM_KEY}"
-          mkdir -p "${MM_INSTALL_DIR}"
-          cd "${MM_INSTALL_DIR}"
-          curl -fsSL https://raw.githubusercontent.com/merly-ai/MPCC-Universal/main/install.sh \
-            | bash -s -- -q -k "${MM_KEY}" install --staging
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
 
-      - name: Run MerlyMentor
-        timeout-minutes: 4
-        run: |
-          echo "::add-mask::${MM_KEY}"
-          cd "${MM_INSTALL_DIR}"
-          ./MerlyMentor-Staging --github-actions -D "${GITHUB_WORKSPACE}" check
+    - name: Install MPCC Universal (staging)
+      run: |
+        echo "::add-mask::${{ inputs.mm-key }}"
+        mkdir -p "${{ inputs.install-dir }}"
+        cd "${{ inputs.install-dir }}"
+        curl -fsSL https://raw.githubusercontent.com/merly-ai/MPCC-Universal/main/install.sh \
+          | bash -s -- -q -k "${{ inputs.mm-key }}" install --staging
+
+    - name: Run MerlyMentor
+      run: |
+        echo "::add-mask::${{ inputs.mm-key }}"
+        cd "${{ inputs.install-dir }}"
+        ./MerlyMentor-Staging --github-actions -D "${GITHUB_WORKSPACE}" check
