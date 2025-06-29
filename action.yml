@@ -1,13 +1,13 @@
 # File: action.yml
 name: "Merly Mentor Check"
-description: "Install MPCC Universal and run MerlyMentor checks on your repository"  # ≤125 chars
+description: "Installs MPCC Universal and runs MerlyMentor against your repository."
 branding:
   icon: "rocket"
   color: "blue"
 
 inputs:
   mm-key:
-    description: "Merly API key (set as repo secret MM_KEY)"
+    description: "Merly API key (store as repo secret MM_KEY)"
     required: true
   install-dir:
     description: "Directory to install MPCC Universal into"
@@ -27,6 +27,7 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
 
     - name: Install MPCC Universal (staging)
+      shell: bash
       run: |
         echo "::add-mask::${{ inputs.mm-key }}"
         mkdir -p "${{ inputs.install-dir }}"
@@ -35,6 +36,7 @@ runs:
           | bash -s -- -q -k "${{ inputs.mm-key }}" install --staging
 
     - name: Run MerlyMentor
+      shell: bash
       run: |
         echo "::add-mask::${{ inputs.mm-key }}"
         cd "${{ inputs.install-dir }}"
