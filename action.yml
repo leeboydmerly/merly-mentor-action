@@ -1,6 +1,6 @@
 # File: action.yml
 name: "Merly Mentor Check"
-description: "Installs MPCC Universal and runs MerlyMentor against your repository."
+description: "Runs MerlyMentor inside Docker against your repository."
 branding:
   icon: "rocket"
   color: "blue"
@@ -9,35 +9,27 @@ inputs:
   mm-key:
     description: "Merly API key (store as repo secret MM_KEY)"
     required: true
-  install-dir:
-    description: "Directory to install MPCC Universal into"
+  model-path:
+    description: "Path inside container to mount your models directory"
     required: false
-    default: "merly-install"
-  fetch-depth:
-    description: "Commits to fetch for parent lookup (1, 2, or 0 for full history)"
-    required: false
-    default: "2"
+    default: "/data/.models/"
 
 runs:
   using: "composite"
   steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
-        fetch-depth: ${{ inputs.fetch-depth }}
+        fetch-depth: 2
 
-    - name: Install MPCC Universal (staging)
-      shell: bash
-      run: |
-        echo "::add-mask::${{ inputs.mm-key }}"
-        mkdir -p "${{ inputs.install-dir }}"
-        cd "${{ inputs.install-dir }}"
-        curl -fsSL https://raw.githubusercontent.com/merly-ai/MPCC-Universal/main/install.sh \
-          | bash -s -- -q -k "${{ inputs.mm-key }}" install --staging
+    - name: Change ownership so inner container can write
+      run: sudo chown -R root:root .
 
-    - name: Run MerlyMentor
-      shell: bash
+    - name: Run MerlyMentor in Docker
       run: |
-        echo "::add-mask::${{ inputs.mm-key }}"
-        cd "${{ inputs.install-dir }}"
-        ./MerlyMentor-Staging --github-actions -D "${GITHUB_WORKSPACE}" check
+        docker run --rm \
+          -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
+          -e REPO="/repo" \
+          -e MM_MODELS_PATH="${{ inputs.model-path }}" \
+          -v "${{ github.workspace }}:/repo" \
+          merlyai/mentor:gh_action_v0.0.1
