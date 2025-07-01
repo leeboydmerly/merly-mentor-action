@@ -31,5 +31,4 @@ runs:
           -e REPO="/repo" \
           -e mm_models_root="${{ inputs.model-path }}" \
           -v "${{ github.workspace }}:/repo" \
-          merlyai/mentor:gh_action_v0.0.3 \
-          -D /repo --github-actions check
+          merlyai/mentor:gh_action_v0.0.3 -D /repo --github-actions check
