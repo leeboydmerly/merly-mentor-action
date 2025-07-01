@@ -26,7 +26,6 @@ runs:
       shell: bash
       run: |
         docker run --rm \
-          --user "$(id -u):$(id -g)" \
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
           -e mm_models_root="${{ inputs.model-path }}" \
