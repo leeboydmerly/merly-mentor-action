@@ -22,16 +22,14 @@ runs:
       with:
         fetch-depth: 2
 
-    - name: Change ownership so inner container can write
-      shell: bash
-      run: sudo chown -R root:root .
-
     - name: Run MerlyMentor in Docker
       shell: bash
       run: |
         docker run --rm \
+          --user "$(id -u):$(id -g)" \
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
-          -e MM_MODELS_PATH="${{ inputs.model-path }}" \
+          -e mm_models_root="${{ inputs.model-path }}" \
           -v "${{ github.workspace }}:/repo" \
-          merlyai/mentor:gh_action_v0.0.1
+          merlyai/mentor:gh_action_v0.0.3 \
+          -D /repo --github-actions check
