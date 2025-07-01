@@ -17,6 +17,10 @@ inputs:
     description: "Do a checkout in the action"
     required: false
     default: true
+  path:
+    description: "The path of the repository as defined by your checkout if it is custom"
+    required: false
+    default: ${{ github.workspace }}
 
 runs:
   using: "composite"
@@ -34,5 +38,5 @@ runs:
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
           -e mm_models_root="${{ inputs.model-path }}" \
-          -v "${{ github.workspace }}:/repo" \
+          -v "${{ inputs.path }}:/repo" \
           merlyai/mentor:gh_action_v0.0.3 -D /repo --github-actions check
