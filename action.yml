@@ -8,11 +8,7 @@ branding:
 inputs:
   mm-key:
     description: "Merly API key (store as repo secret MM_KEY)"
-    required: true
-  model-path:
-    description: "Path inside container to mount your models directory"
     required: false
-    default: "/data/.models/"
   checkout-code:
     description: "Do a checkout in the action"
     required: false
@@ -21,6 +17,10 @@ inputs:
     description: "The path of the repository as defined by your checkout if it is custom"
     required: false
     default: ${{ github.workspace }}
+  debug:
+    description: "Turn on debug logs for Mentor"
+    required: false
+    default: false
 
 runs:
   using: "composite"
@@ -37,6 +37,7 @@ runs:
         docker run --rm \
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
-          -e mm_models_root="${{ inputs.model-path }}" \
+          -e mm_models_root="/data/.models/" \
           -v "${{ inputs.path }}:/repo" \
-          merlyai/mentor:gh_action_v0.0.3 -D /repo --github-actions check
+          merlyai/mentor:gh_action_v0.0.3 -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+
