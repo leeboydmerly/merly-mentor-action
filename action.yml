@@ -2,8 +2,8 @@
 name: "Merly Mentor Check"
 description: "Runs MerlyMentor inside Docker against your repository."
 branding:
-  icon: "rocket"
-  color: "blue"
+  icon: check-circle
+  color: white
 
 inputs:
   mm-key:
