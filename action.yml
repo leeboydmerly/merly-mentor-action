@@ -39,6 +39,8 @@ runs:
           -e REPO="/repo" \
           -e mm_models_root="/data/.models/" \
           -v "${{ inputs.path }}:/repo" \
+          -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
+          -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
            merlyai/mentor:gh_action_v0.0.4 -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
 
 
