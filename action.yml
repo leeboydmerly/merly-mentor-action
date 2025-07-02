@@ -39,5 +39,6 @@ runs:
           -e REPO="/repo" \
           -e mm_models_root="/data/.models/" \
           -v "${{ inputs.path }}:/repo" \
-          merlyai/mentor:gh_action_v0.0.3 -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+           merlyai/mentor@sha256:52381fd64b58afb7698cd191af3061a3dcb8dbb2e5701cac216fdec93c2ddfb5 -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+
 
