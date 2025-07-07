@@ -6,13 +6,15 @@ CHECKOUT_CODE="${CHECKOUT_CODE:-false}"
 DEBUG_FLAG="${DEBUG_FLAG:-false}"
 PATH_INPUT="${PATH_INPUT:-}"
 MM_KEY="${MM_KEY:-}"
+DOCKER_TAG="${DOCKER_TAG:-v0.7.9}"
 
 echo "::group::Sanity-checking inputs"
 
-echo "CHECKOUT_CODE= '${CHECKOUT_CODE}'"
-echo "DEBUG_FLAG   = '${DEBUG_FLAG}'"
+echo "CHECKOUT_CODE = '${CHECKOUT_CODE}'"
+echo "DEBUG_FLAG    = '${DEBUG_FLAG}'"
+echo "DOCKER_TAG    = '${DOCKER_TAG}'"
 if [[ -n "${PATH_INPUT}" ]]; then
-  echo "PATH_INPUT   = '${PATH_INPUT}'"
+  echo "PATH_INPUT    = '${PATH_INPUT}'"
 fi
 
 # Validate API key only if provided
@@ -42,6 +44,12 @@ if [[ -n "${PATH_INPUT}" ]]; then
     echo "::error ::Path '${PATH_INPUT}' is not a valid git repository"
     exit 1
   fi
+fi
+
+# Validate that the Docker image tag exists remotely
+if ! docker manifest inspect "merlyai/mentor:${DOCKER_TAG}" > /dev/null 2>&1; then
+  echo "::error ::Docker image 'merlyai/mentor:${DOCKER_TAG}' not found"
+  exit 1
 fi
 
 echo "✔ All inputs look sane"
