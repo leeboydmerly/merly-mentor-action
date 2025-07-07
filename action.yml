@@ -39,7 +39,7 @@ runs:
       env:
         PATH_INPUT: ${{ inputs.path }}
       run: |
-        bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
+        bash "${GITHUB_ACTION_PATH}/sanity-checks.sh"
 
     - name: Run MerlyMentor in Docker
       shell: bash
