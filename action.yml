@@ -7,20 +7,23 @@ branding:
 
 inputs:
   mm-key:
-    description: "Merly API key (format: abcd-efgh-ijkl-mnop; optional; secret)"
+    description: "Merly API key (optional; if provided, must be 4×4 alphanumeric groups separated by hyphens)"
     required: false
+    pattern: '^[A-Za-z0-9]{4}(?:-[A-Za-z0-9]{4}){3}$'
   checkout-code:
-    description: "Do a checkout in the action"
+    description: "Whether to checkout the repo before running"
     required: false
     default: true
+    pattern: '^(true|false)$'
   path:
-    description: "The path of the repository as defined by your checkout if it is custom"
+    description: "Custom path to your repository (optional)"
     required: false
     default: ${{ github.workspace }}
   debug:
     description: "Turn on debug logs for Mentor"
     required: false
     default: false
+    pattern: '^(true|false)$'
 
 runs:
   using: "composite"
@@ -31,14 +34,12 @@ runs:
       with:
         fetch-depth: 2
 
-    - name: Sanity checks
+    - name: Sanity check workspace
       shell: bash
       env:
-        MM_KEY:       ${{ inputs.mm-key }}
-        CHECKOUT_CODE: ${{ inputs.checkout-code }}
-        PATH_INPUT:   ${{ inputs.path }}
-        DEBUG_FLAG:   ${{ inputs.debug }}
-      run: bash "${GITHUB_ACTION_PATH}/sanity-checks.sh"
+        PATH_INPUT: ${{ inputs.path }}
+      run: |
+        bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
 
     - name: Run MerlyMentor in Docker
       shell: bash
