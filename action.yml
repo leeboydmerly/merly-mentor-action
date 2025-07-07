@@ -38,7 +38,7 @@ runs:
         CHECKOUT_CODE: ${{ inputs.checkout-code }}
         PATH_INPUT:   ${{ inputs.path }}
         DEBUG_FLAG:   ${{ inputs.debug }}
-      run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
+      run: bash "${GITHUB_ACTION_PATH}/sanity-checks.sh"
 
     - name: Run MerlyMentor in Docker
       shell: bash
