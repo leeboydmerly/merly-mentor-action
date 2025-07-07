@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# avoid unbound‐variable errors by providing safe defaults
+CHECKOUT_CODE="${CHECKOUT_CODE:-false}"
+DEBUG_FLAG  ="${DEBUG_FLAG:-false}"
+PATH_INPUT  ="${PATH_INPUT:-}"
+MM_KEY      ="${MM_KEY:-}"
+
 echo "::group::Sanity-checking inputs"
 
 echo "CHECKOUT_CODE= '${CHECKOUT_CODE}'"
 echo "DEBUG_FLAG   = '${DEBUG_FLAG}'"
-if [[ -n "${PATH_INPUT:-}" ]]; then
+if [[ -n "${PATH_INPUT}" ]]; then
   echo "PATH_INPUT   = '${PATH_INPUT}'"
 fi
 
 # Validate API key only if provided
-if [[ -n "${MM_KEY:-}" ]]; then
+if [[ -n "${MM_KEY}" ]]; then
   if [[ ! "${MM_KEY}" =~ ^[A-Za-z0-9]{4}(-[A-Za-z0-9]{4}){3}$ ]]; then
     echo "::error ::MM_KEY must match format abcd-efgh-ijkl-mnop (4 groups of 4 alphanumeric characters)"
     exit 1
@@ -27,7 +33,7 @@ for var_name in CHECKOUT_CODE DEBUG_FLAG; do
 done
 
 # If a path was provided, validate it
-if [[ -n "${PATH_INPUT:-}" ]]; then
+if [[ -n "${PATH_INPUT}" ]]; then
   if [[ ! -d "${PATH_INPUT}" ]]; then
     echo "::error ::Path '${PATH_INPUT}' does not exist or is not a directory"
     exit 1
