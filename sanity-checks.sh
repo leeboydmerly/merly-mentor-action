@@ -3,9 +3,9 @@ set -euo pipefail
 
 # avoid unbound‐variable errors by providing safe defaults
 CHECKOUT_CODE="${CHECKOUT_CODE:-false}"
-DEBUG_FLAG  ="${DEBUG_FLAG:-false}"
-PATH_INPUT  ="${PATH_INPUT:-}"
-MM_KEY      ="${MM_KEY:-}"
+DEBUG_FLAG="${DEBUG_FLAG:-false}"
+PATH_INPUT="${PATH_INPUT:-}"
+MM_KEY="${MM_KEY:-}"
 
 echo "::group::Sanity-checking inputs"
 
