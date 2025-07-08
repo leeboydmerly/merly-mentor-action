@@ -59,5 +59,5 @@ runs:
           -v "${{ inputs.path }}:/repo" \
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
-          merlyai/mentor:${{ inputs.docker-tag }} \
+          merlyai/mentor:${{ github.ref_name }} \
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
