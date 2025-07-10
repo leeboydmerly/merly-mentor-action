@@ -23,7 +23,7 @@ jobs:
 
       - name: Template README.md
         run: |
-          sed "s/{{TAG}}/${TAG}/g" templates/README.md > test
+          sed "s/{{TAG}}/${TAG}/g" templates/test > test
 
       - name: Template action.yaml
         run: |
