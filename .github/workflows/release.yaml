@@ -1,12 +1,4 @@
-name: Release on Tag
-
-on:
-  push:
-    tags:
-      - 'v[0-9]+\.[0-9]+\.[0-9]+'  # semver tags like v1.2.3
-
-jobs:
-  release:
+release:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +20,10 @@ jobs:
       - name: Template action.yaml
         run: |
           sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > action.yaml
+
+      - name: Debug workspace
+        run: |
+          ls -la
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
