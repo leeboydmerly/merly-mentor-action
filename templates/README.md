@@ -1,3 +1,4 @@
+the current release is {{TAG}}
 # Merly Mentor Check
 
 ![Merly Wizard Dog Icon](https://cdn.prod.website-files.com/670eb2a8c376d5ee29ffbaa9/67313888472820398af63de2_merly%20icon.png)
@@ -6,7 +7,7 @@ Runs **MerlyMentor** inside Docker against your repository, turning technical de
 
 ---
 
-## 🔮 What It Does:
+## 🔮 What It Does
 
 - ✅ Determine Code Quality  
 - ✅ Objective analysis  
