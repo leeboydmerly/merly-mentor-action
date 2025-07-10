@@ -34,8 +34,8 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           name: ${{ env.RELEASE_NAME }}
-          files: |
-            action.yaml
-            test
+          files: 
+            - action.yaml
+            - test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
