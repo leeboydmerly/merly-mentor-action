@@ -23,7 +23,7 @@ jobs:
 
       - name: Template README.md
         run: |
-          sed "s/{{TAG}}/${TAG}/g" templates/test > test
+          sed "s/{{TAG}}/${TAG}/g" templates/test > README.md
 
       - name: Template action.yaml
         run: |
@@ -33,9 +33,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
-          name: ${{ env.RELEASE_NAME }}
-          files: 
+          name:     ${{ env.RELEASE_NAME }}
+          files:
             - action.yaml
-            - test
+            - README.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
