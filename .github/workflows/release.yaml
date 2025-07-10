@@ -36,7 +36,6 @@ jobs:
           name: ${{ env.RELEASE_NAME }}
           files: |
             action.yaml
-            README.md
             test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
