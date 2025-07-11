@@ -40,7 +40,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add README.md action.yaml
-          git commit -m "Release: Update templated files"
+          git commit -m "Release: Update templated files for version ${{ env.TAG }}" 
           git push origin main  # Ensure this pushes to the correct branch
 
       - name: Create GitHub Release
