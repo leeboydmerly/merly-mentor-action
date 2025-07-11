@@ -14,7 +14,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           # Fetch all branches to ensure 'main' is available
-          fetch-depth: 0
+          ref: main
+
+      - name: Set up Git for pushing changes
+        run: |
+          git config user.name "Ivan"
+          git config user.email "ivan.zupancic@merly.ai"
 
       - name: Set up tag and version info
         id: versioning
@@ -32,19 +37,25 @@ jobs:
         run: |
           sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > action.yaml
 
-      - name: Debug workspace
-        run: |
-          ls -la
+      # - name: Debug workspace
+      #   run: |
+      #     ls -la
 
-      - name: Commit and push README.md and action.yaml to the repo
+      - name: Commit and push changes
         run: |
-          # Commit the generated files to the root of the repo
-          git config user.name "Ivan"
-          git config user.email "ivan.zupancic@merly.ai"
           git add README.md action.yaml
-          git commit -m "Add action.yaml and README.md for release ${TAG}"
-          #git push origin HEAD:${GITHUB_REF_NAME}
-          git push origin main
+          git commit -m "Release: Update templated files"
+          git push origin main  # Ensure this pushes to the correct branch
+
+      # - name: Commit and push README.md and action.yaml to the repo
+      #   run: |
+      #     # Commit the generated files to the root of the repo
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
+      #     git add README.md action.yaml
+      #     git commit -m "Add action.yaml and README.md for release ${TAG}"
+      #     #git push origin HEAD:${GITHUB_REF_NAME}
+      #     git push origin main
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
