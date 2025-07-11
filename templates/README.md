@@ -7,7 +7,7 @@ Runs **MerlyMentor** inside Docker against your repository, turning technical de
 
 ---
 
-## 🔮 What It Does
+## 🔮 What It Does AAAAAAAAAAAAAAAAAAAA
 
 - ✅ Determine Code Quality  
 - ✅ Objective analysis  
