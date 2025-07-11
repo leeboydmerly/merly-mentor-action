@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Fetch all branches to ensure 'main' is available
+          fetch-depth: 0
 
       - name: Set up tag and version info
         id: versioning
@@ -32,10 +35,6 @@ jobs:
       - name: Debug workspace
         run: |
           ls -la
-
-      - name: Checkout the main branch
-        run: |
-          git checkout main  # just testing
 
       - name: Commit and push README.md and action.yaml to the repo
         run: |
