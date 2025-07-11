@@ -1,4 +1,3 @@
-the current release is {{TAG}}
 # Merly Mentor Check
 
 ![Merly Wizard Dog Icon](https://cdn.prod.website-files.com/670eb2a8c376d5ee29ffbaa9/67313888472820398af63de2_merly%20icon.png)
@@ -78,6 +77,8 @@ uses: merly-ai/mentor-action@v1
 
 **[Download Free Trial](https://www.merly.ai/early-access)**
 
+#### Latest Release is 
+{{TAG}}
 ---
 
 ## 📄 License
