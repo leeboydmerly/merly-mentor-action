@@ -33,6 +33,15 @@ jobs:
         run: |
           ls -la
 
+      - name: Commit and push README.md and action.yaml to the repo
+        run: |
+          # Commit the generated files to the root of the repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md action.yaml
+          git commit -m "Add action.yaml and README.md for release ${TAG}"
+          git push origin HEAD:${GITHUB_REF_NAME}
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -41,6 +50,5 @@ jobs:
           files: |
             action.yaml
             README.md
-          overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
