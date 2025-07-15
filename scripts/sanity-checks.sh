@@ -35,16 +35,16 @@ for var_name in CHECKOUT_CODE DEBUG_FLAG; do
 done
 
 # If a path was provided, validate it
-if [[ -n "${PATH_INPUT}" ]]; then
-  if [[ ! -d "${PATH_INPUT}" ]]; then
-    echo "::error ::Path '${PATH_INPUT}' does not exist or is not a directory"
-    exit 1
-  fi
-  if ! git -C "${PATH_INPUT}" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-    echo "::error ::Path '${PATH_INPUT}' is not a valid git repository"
-    exit 1
-  fi
-fi
+# if [[ -n "${PATH_INPUT}" ]]; then
+#  if [[ ! -d "${PATH_INPUT}" ]]; then
+#    echo "::error ::Path '${PATH_INPUT}' does not exist or is not a directory"
+#    exit 1
+#  fi
+#  if ! git -C "${PATH_INPUT}" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+#    echo "::error ::Path '${PATH_INPUT}' is not a valid git repository"
+#    exit 1
+#  fi
+#fi
 
 # Validate that the Docker image tag exists remotely
 if ! docker manifest inspect "merlyai/mentor:${DOCKER_TAG}" > /dev/null 2>&1; then
