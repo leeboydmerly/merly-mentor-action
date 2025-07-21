@@ -54,10 +54,13 @@ runs:
         DOCKER_TAG:    ${{ inputs.docker-tag }}
       run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
 
-    - name: Run MerlyMentor in Docker
+        - name: Run MerlyMentor + fail on too many issues
       shell: bash
       run: |
-        docker run --rm \
+        MAX_ISSUES=${{ inputs.max-issues }}
+
+        # run MerlyMentor and capture all output
+        OUTPUT=$(docker run --rm \
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
           -e mm_models_root="/data/.models/" \
@@ -65,14 +68,20 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} 2>&1)
 
-    - name: Fail pipeline if issues exceed threshold
-      shell: bash
-      run: |
-        MAX_ISSUES=${{ inputs.max-issues }}
-        ISSUE_COUNT=$(sed -n 's/.*⚠️ ALERT: *\([0-9][0-9]*\).*/\1/p' "$GITHUB_STEP_SUMMARY" || echo 0)
+        # echo it so you still see the full log
+        echo "$OUTPUT"
+
+        # extract the number after "⚠️ ALERT: "
+        if echo "$OUTPUT" | grep -q '⚠️ ALERT:'; then
+          ISSUE_COUNT=$(echo "$OUTPUT" | sed -n 's/.*⚠️ ALERT: *\([0-9]\+\).*/\1/p')
+        else
+          ISSUE_COUNT=0
+        fi
+
         echo "MerlyMentor reported $ISSUE_COUNT new issues; threshold is $MAX_ISSUES"
+
         if [ "$ISSUE_COUNT" -gt "$MAX_ISSUES" ]; then
           echo "❌ Failing pipeline: $ISSUE_COUNT > $MAX_ISSUES"
           exit 1
