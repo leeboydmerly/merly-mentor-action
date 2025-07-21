@@ -29,6 +29,11 @@ inputs:
     required: false
     default: "v0.1.1"
     pattern: '^[A-Za-z0-9._:-]+$'
+  max-issues:
+    description: "Maximum number of new issues allowed before failing the pipeline"
+    required: false
+    default: 0
+    pattern: '^[0-9]+$'
 
 runs:
   using: "composite"
@@ -62,11 +67,13 @@ runs:
           merlyai/mentor:${{ inputs.docker-tag }} \
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
 
-    - name: Fail pipeline if issues found
+    - name: Fail pipeline if issues exceed threshold
       shell: bash
       run: |
-        # fail if MerlyMentor reported any issues
-        if grep -q '⚠️ ALERT' "$GITHUB_STEP_SUMMARY"; then
-          echo "❌ MerlyMentor detected issues; failing pipeline."
+        MAX_ISSUES=${{ inputs.max-issues }}
+        ISSUE_COUNT=$(sed -n 's/.*⚠️ ALERT: *\([0-9][0-9]*\).*/\1/p' "$GITHUB_STEP_SUMMARY" || echo 0)
+        echo "MerlyMentor reported $ISSUE_COUNT new issues; threshold is $MAX_ISSUES"
+        if [ "$ISSUE_COUNT" -gt "$MAX_ISSUES" ]; then
+          echo "❌ Failing pipeline: $ISSUE_COUNT > $MAX_ISSUES"
           exit 1
         fi
