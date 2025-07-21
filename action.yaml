@@ -61,3 +61,12 @@ runs:
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+
+    - name: Fail pipeline if issues found
+      shell: bash
+      run: |
+        # fail if MerlyMentor reported any issues
+        if grep -q '⚠️ ALERT' "$GITHUB_STEP_SUMMARY"; then
+          echo "❌ MerlyMentor detected issues; failing pipeline."
+          exit 1
+        fi
