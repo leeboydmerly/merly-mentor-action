@@ -54,12 +54,11 @@ runs:
         DOCKER_TAG:    ${{ inputs.docker-tag }}
       run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
 
-        - name: Run MerlyMentor + fail on too many issues
+    - name: Run MerlyMentor + fail on too many issues
       shell: bash
       run: |
         MAX_ISSUES=${{ inputs.max-issues }}
 
-        # run MerlyMentor and capture all output
         OUTPUT=$(docker run --rm \
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
@@ -70,10 +69,8 @@ runs:
           merlyai/mentor:${{ inputs.docker-tag }} \
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} 2>&1)
 
-        # echo it so you still see the full log
         echo "$OUTPUT"
 
-        # extract the number after "⚠️ ALERT: "
         if echo "$OUTPUT" | grep -q '⚠️ ALERT:'; then
           ISSUE_COUNT=$(echo "$OUTPUT" | sed -n 's/.*⚠️ ALERT: *\([0-9]\+\).*/\1/p')
         else
