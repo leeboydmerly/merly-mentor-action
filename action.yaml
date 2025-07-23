@@ -70,4 +70,5 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} --fail-count ${{inputs.fail-count}} --fail-priority ${{inputs.fail-priority}}
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} \
+          --fail-priority ${{inputs.fail-priority}} --fail-count ${{inputs.fail-count}} 
