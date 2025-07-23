@@ -29,16 +29,16 @@ inputs:
     required: false
     default: "v0.10.1"
     pattern: '^[A-Za-z0-9._:-]+$'
-  fail-count:
+  max-issue-count:
     description: "Maximum number of new issues allowed before failing the pipeline"
     required: false
     default: 0
     pattern: '^[0-9]+$'
-  fail-priority:
-    description: "Maximum number of new issues allowed before failing the pipeline"
+  max-issue-priority:
+    description: "Maximum priority of issue allowed before failing the pipeline"
     required: false
     default: 0
-    pattern: '^(?:[0-4]|Critical|High|Medium|Low)$'
+    pattern: '^(?:[0-4]|Low|Medium|High|Critical)$'
 
 runs:
   using: "composite"
@@ -71,4 +71,4 @@ runs:
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} \
-          --fail-priority ${{inputs.fail-priority}} --fail-count ${{inputs.fail-count}} 
+          --max-issue-priority ${{inputs.max-issue-priority}} --max-issue-count ${{inputs.max-issue-count}} 
