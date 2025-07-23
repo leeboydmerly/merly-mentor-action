@@ -67,6 +67,6 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} --fail-count=${{ inputs.fail-count }} 2>&1)
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} --fail-count "${{ inputs.fail-count }}" 2>&1)
 
         echo "$OUTPUT"
