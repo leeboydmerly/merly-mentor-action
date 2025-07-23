@@ -34,6 +34,11 @@ inputs:
     required: false
     default: 0
     pattern: '^[0-9]+$'
+  fail-priority:
+    description: "Maximum number of new issues allowed before failing the pipeline"
+    required: false
+    default: 0
+    pattern: '^(?:[0-4]|Critical|High|Medium|Low)$'
 
 runs:
   using: "composite"
@@ -67,3 +72,4 @@ runs:
           merlyai/mentor:${{ inputs.docker-tag }} \
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} \
           --fail-count ${{inputs.fail-count}}
+          --fail-priority ${{inputs.fail-priority}}
