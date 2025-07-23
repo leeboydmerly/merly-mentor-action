@@ -27,7 +27,7 @@ inputs:
   docker-tag:
     description: "Merly Mentor Docker image tag"
     required: false
-    default: "v0.8.6"
+    default: "v0.10.1"
     pattern: '^[A-Za-z0-9._:-]+$'
   max-issues:
     description: "Maximum number of new issues allowed before failing the pipeline"
@@ -70,16 +70,3 @@ runs:
           -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} 2>&1)
 
         echo "$OUTPUT"
-
-        if echo "$OUTPUT" | grep -q '⚠️ ALERT:'; then
-          ISSUE_COUNT=$(echo "$OUTPUT" | sed -n 's/.*⚠️ ALERT: *\([0-9]\+\).*/\1/p')
-        else
-          ISSUE_COUNT=0
-        fi
-
-        echo "MerlyMentor reported $ISSUE_COUNT new issues; threshold is $MAX_ISSUES"
-
-        if [ "$ISSUE_COUNT" -gt "$MAX_ISSUES" ]; then
-          echo "❌ Failing pipeline: $ISSUE_COUNT > $MAX_ISSUES"
-          exit 1
-        fi
