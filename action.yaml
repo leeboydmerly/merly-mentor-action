@@ -29,7 +29,7 @@ inputs:
     required: false
     default: "v0.10.1"
     pattern: '^[A-Za-z0-9._:-]+$'
-  max-issues:
+  fail-count:
     description: "Maximum number of new issues allowed before failing the pipeline"
     required: false
     default: 0
@@ -67,6 +67,6 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} 2>&1)
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} --fail-count ${{ inputs.fail-count }} 2>&1)
 
         echo "$OUTPUT"
