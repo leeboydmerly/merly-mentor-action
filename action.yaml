@@ -52,11 +52,13 @@ runs:
     - name: Sanity-check inputs
       shell: bash
       env:
-        MM_KEY:        ${{ inputs.mm-key }}
-        CHECKOUT_CODE: ${{ inputs.checkout-code }}
-        PATH_INPUT:    ${{ github.workspace }}${{ inputs.path && format('/{0}', inputs.path) }}
-        DEBUG_FLAG:    ${{ inputs.debug }}
-        DOCKER_TAG:    ${{ inputs.docker-tag }}
+        MM_KEY:             ${{ inputs.mm-key }}
+        CHECKOUT_CODE:      ${{ inputs.checkout-code }}
+        PATH_INPUT:         ${{ github.workspace }}${{ inputs.path && format('/{0}', inputs.path) }}
+        DEBUG_FLAG:         ${{ inputs.debug }}
+        DOCKER_TAG:         ${{ inputs.docker-tag }}
+        MAX_ISSUE_COUNT:    ${{ inputs.max-issue-count }}
+        MAX_ISSUE_PRIORITY: ${{ inputs.max-issue-priority }}
       run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
 
     - name: Run MerlyMentor + fail on too many issues
