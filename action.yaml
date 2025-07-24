@@ -73,6 +73,6 @@ runs:
           --github-actions \
           -D /repo \
           check \
-          --max-issue-priority ${{inputs.max-issue-priority}} \
-          --max-issue-count ${{inputs.max-issue-count}} \
+          ${{inputs.max-issue-count != 0 && '--max-issue-count ' inputs.max-issue-count}}
+          ${{inputs.max-issue-priority != 0 && '--max-issue-priority ' inputs.max-issue-priority}}
           ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
