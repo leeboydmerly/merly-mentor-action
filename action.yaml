@@ -27,8 +27,18 @@ inputs:
   docker-tag:
     description: "Merly Mentor Docker image tag"
     required: false
-    default: "v1.0.42"
+    default: "v0.10.1"
     pattern: '^[A-Za-z0-9._:-]+$'
+  max-issue-count:
+    description: "Maximum number of new issues allowed before failing the pipeline"
+    required: false
+    default: 0
+    pattern: '^[0-9]+$'
+  max-issue-priority:
+    description: "Maximum priority of issue allowed before failing the pipeline"
+    required: false
+    default: 0
+    pattern: '^(?:[0-4]|Low|Medium|High|Critical)$'
 
 runs:
   using: "composite"
@@ -49,7 +59,7 @@ runs:
         DOCKER_TAG:    ${{ inputs.docker-tag }}
       run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
 
-    - name: Run MerlyMentor in Docker
+    - name: Run MerlyMentor + fail on too many issues
       shell: bash
       run: |
         docker run --rm \
@@ -60,4 +70,8 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+          --github-actions \
+          -D /repo check \
+          --max-issue-priority ${{inputs.max-issue-priority}} \
+          --max-issue-count ${{inputs.max-issue-count}} \
+          ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
