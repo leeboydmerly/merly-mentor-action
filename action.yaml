@@ -70,8 +70,6 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          --github-actions \
-          -D /repo check \
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} \
           --max-issue-priority ${{inputs.max-issue-priority}} \
-          --max-issue-count ${{inputs.max-issue-count}} \
-          ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+          --max-issue-count ${{inputs.max-issue-count}}
